@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Golden Clicker</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #222;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      overflow: hidden;
+    }
+    h1 {
+      margin-top: 30px;
+      color: gold;
+      font-size: 3em;
+    }
+    #coin {
+      margin-top: 50px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, gold, #c99d00);
+      border-radius: 50%;
+      display: inline-block;
+      cursor: pointer;
+      box-shadow: 0 0 20px gold;
+      transition: transform 0.1s;
+      position: relative;
+      z-index: 2;
+    }
+    #coin:active {
+      transform: scale(1.1);
+    }
+    #score {
+      margin-top: 30px;
+      font-size: 2em;
+    }
+    #reset {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #444;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: gold;
+      border-radius: 50%;
+      opacity: 1;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Golden Clicker</h1>
+  <div id="coin"></div>
+  <div id="score">Score: 0</div>
+  <button id="reset">Reset Score</button>
+
+  <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+
+  <script>
+    let score = 0;
+    const coin = document.getElementById('coin');
+    const scoreDisplay = document.getElementById('score');
+    const resetBtn = document.getElementById('reset');
+    const clickSound = document.getElementById('clickSound');
+
+    coin.addEventListener('click', (e) => {
+      // Increment score
+      score++;
+      scoreDisplay.textContent = 'Score: ' + score;
+
+      // Play sound
+      clickSound.currentTime = 0;
+      clickSound.play();
+
+      // Create particle
+      for (let i = 0; i < 8; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        document.body.appendChild(particle);
+
+        const angle = Math.random() * 2 * Math.PI;
+        const radius = Math.random() * 50 + 20;
+
+        const x = e.clientX + Math.cos(angle) * radius;
+        const y = e.clientY + Math.sin(angle) * radius;
+
+        particle.style.left = e.clientX + 'px';
+        particle.style.top = e.clientY + 'px';
+
+        setTimeout(() => {
+          particle.style.left = x + 'px';
+          particle.style.top = y + 'px';
+          particle.style.opacity = 0;
+        }, 10);
+
+        setTimeout(() => {
+          particle.remove();
+        }, 600);
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      score = 0;
+      scoreDisplay.textContent = 'Score: ' + score;
+    });
+  </script>
+</body>
+</html>
